@@ -10,5 +10,6 @@ jobs:
     working_directory: /go/src/github.com/redshiftzero/scrubber
     steps:
       - checkout
+      - run: apt-get install -y libexif-dev
       - run: go get -v -t -d ./...
       - run: go test -v ./...
