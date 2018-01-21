@@ -5,7 +5,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: redshiftzero/scrubber
+      - image: redshiftzero/scrubber:0.0.1
 
     working_directory: /go/src/github.com/redshiftzero/scrubber
     steps:
