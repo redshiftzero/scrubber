@@ -45,7 +45,6 @@ func doCleaning(inputImagePtr *string, cleanImagePtr *bool, outputImagePtr *stri
 	if err != nil {
 		return err
 	}
-	inputFile.Seek(0, 0)
 
 	// Name output file if no name provided by user
 	if *outputImagePtr == "" {
