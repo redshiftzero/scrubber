@@ -62,3 +62,17 @@ func TestProgramBailsIfInputFileDoesNotExist(t *testing.T) {
 		t.Errorf("doCleaning(%q, _, _) => %q, want %q", testImage, err, "nil")
 	}
 }
+
+func TestProgramJsonOutput(t *testing.T) {
+	testImage := "test/test.jpg"
+	inputImagePtr := &testImage
+	testOutput := ""
+	outputImagePtr := &testOutput
+	testJsonOutputFlag := true
+	jsonOutputPtr := &testJsonOutputFlag
+
+	err := doCleaning(inputImagePtr, outputImagePtr, jsonOutputPtr)
+	if err != nil {
+		t.Errorf("doCleaning(%q, _, _) => %q, want %q", testImage, err, "nil")
+	}
+}

@@ -6,7 +6,7 @@ Simple CLI to remove metadata from images
 ```
 $ scrubber
 Usage of scrubber:
-  -image string
+  -input string
     	Image file to scrub metadata from
   -json
     	Print JSON metadata to stdout
