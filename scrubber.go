@@ -22,20 +22,20 @@ func getDefaultOutputFilename(inputImage string) string {
 	return outputFileName
 }
 
-func doCleaning(inputImagePtr *string, cleanImagePtr *bool, outputImagePtr *string, jsonOutputPtr *bool) error {
+func doCleaning(inputImage string, cleanImage bool, outputImage string, jsonOutput bool) error {
 	// Check user provided an input file
-	if *inputImagePtr == "" {
+	if inputImage == "" {
 		err := errors.New("user did not provide an image")
 		flag.Usage()
 		return err
 	}
 
 	// Check user provided an actual file
-	if _, err := os.Stat(*inputImagePtr); os.IsNotExist(err) {
+	if _, err := os.Stat(inputImage); os.IsNotExist(err) {
 		return err
 	}
 
-	inputFile, err := os.Open(*inputImagePtr)
+	inputFile, err := os.Open(inputImage)
 	if err != nil {
 		return err
 	}
@@ -47,11 +47,11 @@ func doCleaning(inputImagePtr *string, cleanImagePtr *bool, outputImagePtr *stri
 	}
 
 	// Name output file if no name provided by user
-	if *outputImagePtr == "" {
-		*outputImagePtr = getDefaultOutputFilename(*inputImagePtr)
+	if outputImage == "" {
+		outputImage = getDefaultOutputFilename(inputImage)
 	}
 
-	if *cleanImagePtr == true {
+	if cleanImage == true {
 		// See if image type is not supported
 		if imageType != "png" && imageType != "jpeg" && imageType != "jpg" {
 			fmt.Println(imageType)
@@ -60,7 +60,7 @@ func doCleaning(inputImagePtr *string, cleanImagePtr *bool, outputImagePtr *stri
 		}
 
 		// Create output file
-		outputFile, err := os.Create(*outputImagePtr)
+		outputFile, err := os.Create(outputImage)
 		if err != nil {
 			return err
 		}
@@ -72,17 +72,22 @@ func doCleaning(inputImagePtr *string, cleanImagePtr *bool, outputImagePtr *stri
 		if imageType == "jpeg" || imageType == "jpg" {
 			jpeg.Encode(outputFile, imageData, nil)
 		}
-		fmt.Println("Clean version of", *inputImagePtr, "saved in the current directory as", *outputImagePtr)
+		fmt.Println("Clean version of", inputImage, "saved in the current directory as", outputImage)
 		outputFile.Close()
 	}
 
 	// Optionally output metadata as JSON
-	if *jsonOutputPtr == false {
+	if jsonOutput == false {
 		return nil
 	}
-	data, _ := exif.Read(*inputImagePtr)
+	data, err := exif.Read(inputImage)
+	// We expect png to error as there is no EXIF data
+	if err != nil && imageType != "png" {
+		return err
+	}
+
 	jsonObj := gabs.New()
-	jsonObj.Set(*inputImagePtr, "Filename")
+	jsonObj.Set(inputImage, "Filename")
 	//fmt.Println(data)
 	if data != nil {
 		for key, val := range data.Tags {
@@ -99,7 +104,7 @@ func main() {
 	outputImagePtr := flag.String("output", "", "Output file of cleaned image (optional)")
 	jsonOutputPtr := flag.Bool("json", false, "Print JSON metadata to stdout (optional)")
 	flag.Parse()
-	err := doCleaning(inputImagePtr, cleanImagePtr, outputImagePtr, jsonOutputPtr)
+	err := doCleaning(*inputImagePtr, *cleanImagePtr, *outputImagePtr, *jsonOutputPtr)
 	if err != nil {
 		fmt.Println("[!]", err)
 		os.Exit(1)

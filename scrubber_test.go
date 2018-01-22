@@ -44,13 +44,9 @@ var doCleaningTests = []struct {
 
 func TestDoCleaningSuccess(t *testing.T) {
 	for _, tt := range doCleaningTests {
-		inputImagePtr := &tt.inputImage
-		outputImagePtr := &tt.outputImage
-		jsonOutputPtr := &tt.jsonFlag
-		testCleanImagePtr := &tt.cleanFlag
-		s := doCleaning(inputImagePtr, testCleanImagePtr, outputImagePtr, jsonOutputPtr)
+		s := doCleaning(tt.inputImage, tt.cleanFlag, tt.outputImage, tt.jsonFlag)
 		if s != nil && tt.errorExpected == false {
-			t.Errorf("doCleaning(%q, %q, %q, %q) => %q, expected errors: %q", inputImagePtr, testCleanImagePtr, outputImagePtr, jsonOutputPtr, s, tt.errorExpected)
+			t.Errorf("doCleaning(%q, %q, %q, %q) => %q, expected errors: %q", tt.inputImage, tt.cleanFlag, tt.outputImage, tt.jsonFlag, s, tt.errorExpected)
 		}
 	}
 }
