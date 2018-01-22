@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -11,7 +12,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Jeffail/gabs"
 	"github.com/xiam/exif"
 )
 
@@ -86,15 +86,19 @@ func doCleaning(inputImage string, cleanImage bool, outputImage string, jsonOutp
 		return err
 	}
 
-	jsonObj := gabs.New()
-	jsonObj.Set(inputImage, "Filename")
-	//fmt.Println(data)
 	if data != nil {
-		for key, val := range data.Tags {
-			jsonObj.Set(val, key)
+		metadata := data.Tags
+		metadata["Filename"] = inputImage
+		jsonMetadata, err := json.MarshalIndent(metadata, "", "   ")
+		if err != nil {
+			return err
 		}
+		os.Stdout.Write(jsonMetadata)
 	}
-	fmt.Println(jsonObj.StringIndent("", "  "))
+	if data == nil {
+		fmt.Printf("{\"Filename\": \"%v\"}\n", inputImage)
+	}
+
 	return nil
 }
 
