@@ -67,6 +67,7 @@ func doCleaning(inputImagePtr *string, cleanImagePtr *bool, outputImagePtr *stri
 		}
 
 		if imageType == "png" {
+			// AFAIK PNG does not have EXIF data, but let's make a new file for giggles
 			png.Encode(outputFile, imageData)
 		}
 		if imageType == "jpeg" || imageType == "jpg" {
@@ -94,7 +95,7 @@ func doCleaning(inputImagePtr *string, cleanImagePtr *bool, outputImagePtr *stri
 }
 
 func main() {
-	inputImagePtr := flag.String("input", "", "Image file to scrub metadata from")
+	inputImagePtr := flag.String("input", "", "Image file to scrub metadata from (required)")
 	cleanImagePtr := flag.Bool("clean", true, "Generate cleaned image (optional)")
 	outputImagePtr := flag.String("output", "", "Output file of cleaned image (optional)")
 	jsonOutputPtr := flag.Bool("json", false, "Print JSON metadata to stdout (optional)")

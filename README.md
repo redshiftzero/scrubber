@@ -3,7 +3,7 @@
 
 Simple CLI to remove metadata from images
 
-*Warning:* This is in development and should not be yet used by high risk users.
+*Note:* This is in development and should not be used by high risk users.
 
 ```
 $ scrubber -help
@@ -11,7 +11,7 @@ Usage of scrubber:
   -clean
     	Generate cleaned image (optional) (default true)
   -input string
-    	Image file to scrub metadata from
+    	Image file to scrub metadata from (required)
   -json
     	Print JSON metadata to stdout (optional)
   -output string

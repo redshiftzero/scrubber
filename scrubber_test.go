@@ -21,66 +21,36 @@ func TestGetDefaultOutputFilename(t *testing.T) {
 	}
 }
 
-func TestProgramCompletesIfInputFile(t *testing.T) {
-	testImage := "test/test.jpeg"
-	inputImagePtr := &testImage
-	testOutput := ""
-	outputImagePtr := &testOutput
-	testJsonOutputFlag := false
-	jsonOutputPtr := &testJsonOutputFlag
-	testCleanImageFlag := true
-	testCleanImagePtr := &testCleanImageFlag
-
-	err := doCleaning(inputImagePtr, testCleanImagePtr, outputImagePtr, jsonOutputPtr)
-	if err != nil {
-		t.Errorf("doCleaning(%q, _, _) => %q, want %q", testImage, err, "nil")
-	}
+var doCleaningTests = []struct {
+	inputImage    string
+	outputImage   string
+	jsonFlag      bool
+	cleanFlag     bool
+	errorExpected bool
+}{
+	// Test program completes if input file is jpeg
+	{"test/test.jpeg", "", false, true, false},
+	// Test program completes if input file is png
+	{"test/test.png", "", false, true, false},
+	// Test program bails if no input file provided
+	{"", "", false, true, true},
+	// Test program bails if input file provided but it does not exist
+	{"test/doesnotexist.jpeg", "", false, true, true},
+	// Test program does not bail when JSON output is to be provided
+	{"test/test.jpeg", "", true, true, false},
+	// Test program does not bail when JSON output is to be provided for file without exif metadata
+	{"test/test.png", "", true, true, false},
 }
 
-func TestProgramBailsIfNoInputFile(t *testing.T) {
-	testImage := ""
-	inputImagePtr := &testImage
-	testOutput := ""
-	outputImagePtr := &testOutput
-	testJsonOutputFlag := false
-	jsonOutputPtr := &testJsonOutputFlag
-	testCleanImageFlag := true
-	testCleanImagePtr := &testCleanImageFlag
-
-	err := doCleaning(inputImagePtr, testCleanImagePtr, outputImagePtr, jsonOutputPtr)
-	if err == nil {
-		t.Errorf("doCleaning(%q, _, _) => %q, want %q", testImage, err, err)
-	}
-}
-
-func TestProgramBailsIfInputFileDoesNotExist(t *testing.T) {
-	testImage := "test/doesnotexist.jpeg"
-	inputImagePtr := &testImage
-	testOutput := ""
-	outputImagePtr := &testOutput
-	testJsonOutputFlag := false
-	jsonOutputPtr := &testJsonOutputFlag
-	testCleanImageFlag := true
-	testCleanImagePtr := &testCleanImageFlag
-
-	err := doCleaning(inputImagePtr, testCleanImagePtr, outputImagePtr, jsonOutputPtr)
-	if err == nil {
-		t.Errorf("doCleaning(%q, _, _) => %q, want %q", testImage, err, "nil")
-	}
-}
-
-func TestProgramJsonOutput(t *testing.T) {
-	testImage := "test/test.jpeg"
-	inputImagePtr := &testImage
-	testOutput := ""
-	outputImagePtr := &testOutput
-	testJsonOutputFlag := true
-	jsonOutputPtr := &testJsonOutputFlag
-	testCleanImageFlag := true
-	testCleanImagePtr := &testCleanImageFlag
-
-	err := doCleaning(inputImagePtr, testCleanImagePtr, outputImagePtr, jsonOutputPtr)
-	if err != nil {
-		t.Errorf("doCleaning(%q, _, _) => %q, want %q", testImage, err, "nil")
+func TestDoCleaningSuccess(t *testing.T) {
+	for _, tt := range doCleaningTests {
+		inputImagePtr := &tt.inputImage
+		outputImagePtr := &tt.outputImage
+		jsonOutputPtr := &tt.jsonFlag
+		testCleanImagePtr := &tt.cleanFlag
+		s := doCleaning(inputImagePtr, testCleanImagePtr, outputImagePtr, jsonOutputPtr)
+		if s != nil && tt.errorExpected == false {
+			t.Errorf("doCleaning(%q, %q, %q, %q) => %q, expected errors: %q", inputImagePtr, testCleanImagePtr, outputImagePtr, jsonOutputPtr, s, tt.errorExpected)
+		}
 	}
 }
