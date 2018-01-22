@@ -10,6 +10,7 @@ var outputFilenameTests = []struct {
 }{
 	{"test.jpg", "test_clean.jpg"},
 	{"test.png", "test_clean.png"},
+	{"thishasnoextension", "thishasnoextension_clean"},
 }
 
 func TestGetDefaultOutputFilename(t *testing.T) {

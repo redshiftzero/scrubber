@@ -17,8 +17,15 @@ import (
 
 func getDefaultOutputFilename(inputImage string) string {
 	inputFileName := filepath.Base(inputImage)
-	outputStr := strings.Split(inputFileName, ".")
-	outputFileName := outputStr[0] + "_clean." + outputStr[1]
+	doesFileNameHaveExtension := strings.Contains(inputFileName, ".")
+	outputFileName := ""
+	if doesFileNameHaveExtension == true {
+		outputStr := strings.Split(inputFileName, ".")
+		outputFileName = outputStr[0] + "_clean." + outputStr[1]
+	}
+	if doesFileNameHaveExtension == false {
+		outputFileName = inputFileName + "_clean"
+	}
 	return outputFileName
 }
 
@@ -110,7 +117,7 @@ func main() {
 	flag.Parse()
 	err := doCleaning(*inputImagePtr, *cleanImagePtr, *outputImagePtr, *jsonOutputPtr)
 	if err != nil {
-		fmt.Println("[!]", err)
+		fmt.Println(os.Stderr, "[!]", err)
 		os.Exit(1)
 	}
 }
