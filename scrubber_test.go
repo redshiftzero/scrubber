@@ -22,14 +22,16 @@ func TestGetDefaultOutputFilename(t *testing.T) {
 }
 
 func TestProgramCompletesIfInputFile(t *testing.T) {
-	testImage := "test/test.jpg"
+	testImage := "test/test.jpeg"
 	inputImagePtr := &testImage
 	testOutput := ""
 	outputImagePtr := &testOutput
 	testJsonOutputFlag := false
 	jsonOutputPtr := &testJsonOutputFlag
+	testCleanImageFlag := true
+	testCleanImagePtr := &testCleanImageFlag
 
-	err := doCleaning(inputImagePtr, outputImagePtr, jsonOutputPtr)
+	err := doCleaning(inputImagePtr, testCleanImagePtr, outputImagePtr, jsonOutputPtr)
 	if err != nil {
 		t.Errorf("doCleaning(%q, _, _) => %q, want %q", testImage, err, "nil")
 	}
@@ -42,36 +44,42 @@ func TestProgramBailsIfNoInputFile(t *testing.T) {
 	outputImagePtr := &testOutput
 	testJsonOutputFlag := false
 	jsonOutputPtr := &testJsonOutputFlag
+	testCleanImageFlag := true
+	testCleanImagePtr := &testCleanImageFlag
 
-	err := doCleaning(inputImagePtr, outputImagePtr, jsonOutputPtr)
+	err := doCleaning(inputImagePtr, testCleanImagePtr, outputImagePtr, jsonOutputPtr)
 	if err == nil {
 		t.Errorf("doCleaning(%q, _, _) => %q, want %q", testImage, err, err)
 	}
 }
 
 func TestProgramBailsIfInputFileDoesNotExist(t *testing.T) {
-	testImage := "test/doesnotexist.jpg"
+	testImage := "test/doesnotexist.jpeg"
 	inputImagePtr := &testImage
 	testOutput := ""
 	outputImagePtr := &testOutput
 	testJsonOutputFlag := false
 	jsonOutputPtr := &testJsonOutputFlag
+	testCleanImageFlag := true
+	testCleanImagePtr := &testCleanImageFlag
 
-	err := doCleaning(inputImagePtr, outputImagePtr, jsonOutputPtr)
+	err := doCleaning(inputImagePtr, testCleanImagePtr, outputImagePtr, jsonOutputPtr)
 	if err == nil {
 		t.Errorf("doCleaning(%q, _, _) => %q, want %q", testImage, err, "nil")
 	}
 }
 
 func TestProgramJsonOutput(t *testing.T) {
-	testImage := "test/test.jpg"
+	testImage := "test/test.jpeg"
 	inputImagePtr := &testImage
 	testOutput := ""
 	outputImagePtr := &testOutput
 	testJsonOutputFlag := true
 	jsonOutputPtr := &testJsonOutputFlag
+	testCleanImageFlag := true
+	testCleanImagePtr := &testCleanImageFlag
 
-	err := doCleaning(inputImagePtr, outputImagePtr, jsonOutputPtr)
+	err := doCleaning(inputImagePtr, testCleanImagePtr, outputImagePtr, jsonOutputPtr)
 	if err != nil {
 		t.Errorf("doCleaning(%q, _, _) => %q, want %q", testImage, err, "nil")
 	}
