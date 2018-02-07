@@ -1,0 +1,3 @@
+package: github.com/redshiftzero/scrubber
+import:
+- package: github.com/xiam/exif
