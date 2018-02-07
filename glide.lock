@@ -1,6 +1,0 @@
-hash: d47ceb562d8e23e2f84999d71ae725f032740ebc19a6db8ac8e7d9b661e8667b
-updated: 2018-02-07T10:25:32.393117-08:00
-imports:
-- name: github.com/xiam/exif
-  version: 33e82e3db72f03c4d55d10b7275d267fc7cd0e45
-testImports: []

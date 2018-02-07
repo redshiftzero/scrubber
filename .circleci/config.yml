@@ -10,7 +10,8 @@ jobs:
     working_directory: /go/src/github.com/redshiftzero/scrubber
     steps:
       - checkout
-      - run: go get github.com/Masterminds/glide
-      - run: glide install
+      - run: go get -u github.com/golang/dep/cmd/dep
+      - run: dep ensure
+      - run: go install
       #- run: CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' ./...
       - run: go test -v ./...
